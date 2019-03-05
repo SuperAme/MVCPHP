@@ -22,6 +22,18 @@
             //requerir controlador
             require_once '../app/controllers/'.$this->controladorActual. '.php';
             $this->controladorActual = new $this->controladorActual;
+            
+            //verificar la segunda parte de la URL que sería el método
+            if (isset($url[1])){
+                if (method_exists($this->controladorActual, $url[1])){
+                    $this->metodoActual = $url[1];
+                    unset($url[1]);
+                }
+            }
+            //echo $this->metodoActual;
+            $this->parametros = $url ? array_values($url) : [];
+            //llamar callback con para,etros
+            call_user_func_array([$this->controladorActual, $this->metodoActual], $this->parametros);
         }
         
         public function getUrl(){
